@@ -4,37 +4,183 @@
 <head>
     <meta charset="utf-8" />
     <title>WOMBAT Human Machine Interface</title>
+    
+    <script>
+        // mostRecentUpdate contains a Date object set to the value of the "last modified" metadata of the most recently modified .txt file that has accessed.
+        var mostRecentUpdate;
+        // robotDictionary stores a dictionary of the data collected from each robot's text file, and is indexed using the robot's ID
+        var robotDictionary = {};
+        //Temporary testing initialisation 
+        //TODO: remove once we are able to populate from .txt
+        robotDictionary.ROBOT1 = {
+            latitude: -28.7761,
+            longitude: 114.6113,
+            altitude: 50,
+            objectDetected: "N",
+            batteryLevel: 90,
+            carryingObject: "N",
+            following: "",
+            mode: "groupBehaviour",
+        };
+        robotDictionary.ROBOT2 = {
+            latitude: -28.7761,
+            longitude: 115.6113,
+            altitude: 50,
+            objectDetected: "N",
+            batteryLevel: 70,
+            carryingObject: "Y",
+            following: "",
+            mode: "groupBehaviour",
+        };
+
+        var selectedRobotID = ""; //The robotID of the currently selected robot
+
+        function selectRobot(robotID) {
+            console.log(robotID);
+            //TODO: Entire function
+            /* listEntry = getelementbyId(robotID)
+             * If listEntry exists
+             *  oldListEntry = getElementByID(selectedRobotID)
+             *  if oldListEntry exists
+             *      oldListEntry.class = "listEntry"
+             *  selectedRobotID = robotID
+             *  listEntry.class = "listEntry SelectedListEntry"
+             *  statWin.innerHTML = STUFF
+             *  
+            */  
+        }
+
+        function updateData() {
+            //TODO: entire function
+            //TODO: How are we telling if an entire robot .txt has been removed?
+            /* currentUpdateTime = mostRecentUpdate
+             * iterate through .txt files
+             *  if last modified > mostRecentUpdate
+             *      access text file, record values in robotDictionary
+             *      if last modified > currentUpdateTime 
+             *          currentUpdateTime = last modified
+             *      updateDisplay(robotID)
+             *mostRecentUpdate = currentUpdateTime
+             * 
+             */
+        };
+
+
+
+        //Updates the robotList, statWin and robot on map associated with robotID using the data in the robotDictionary.
+		//If there is no entry in the robotDictionary, removes the robotList and robot on map, and clears the statWin if that robot was selected
+        function updateDisplay(robotID) {
+            entryData = robotDictionary[robotID];
+            listEntry = document.getElementById(robotID);
+            if (entryData) { //if there is data for that robotID
+				//Add or update display elements relating to the robot
+				//TODO: place/relocate robot on map	
+                innerHTML = robotID
+                            + "<br />Battery: " + entryData.batteryLevel
+                            + " % <br />Mode: " + entryData.mode
+                            + "<br />Carrying object: " + entryData.carryingObject;
+                if (listEntry) { //if there is already a list entry for that robotID
+                    //update the contents of the entry
+                    listEntry.innerHTML = innerHTML;
+                    if (listEntry.classList.contains("selectedListEntry")) { //if list entry is the currently selected one
+						//update contents of statWin
+                        //TODO: update statWin
+                    }
+                }
+                else {//else there is not yet a list entry for this robotID
+					//Create new list entry div and add into robotList
+					newListEntry = document.createElement("div");
+                    newListEntry.className = "listEntry";
+                    newListEntry.id = robotID;
+                    newListEntry.setAttribute("onclick", "selectRobot(this.id)");
+					newListEntry.innerHTML = innerHTML;
+                    document.getElementById("robotList").appendChild(newListEntry);
+                }
+            }
+			else { //else there is no longer an entry for this robot
+				//remove display elements relating to the robot
+				if (listEntry) { //if there is an entry in the list
+					if (listEntry.classList.contains("selectedListEntry")) { //if list entry is the currently selected one
+						//clear contents of statWin
+                        //TODO: clear statWin
+                    }
+					//remove list entry
+					listEntry.parentNode.removeChild(listEntry);
+					//TODO: remove robot from map
+				}
+			}
+            
+        }
+		
+		function start() {
+			//TODO: Remove, just for testing
+			updateDisplay("ROBOT1");
+			updateDisplay("ROBOT2");
+			updateDisplay("ROBOT3");
+		}
+		
+    </script>
+    
+    <style>
+        .containerRow {
+            display: grid;
+        }
+
+        .listWin {
+            grid-column: 1;
+            grid-row: 1;
+            background-color: lightgray;
+            overflow-y: scroll;
+        }
+
+        .listEntry {
+            border-style: solid;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .selectedListEntry {
+            background-color: silver;
+        }
+
+        .mapWin {
+            grid-column-start: 2;
+            grid-column-end: 16;
+            grid-row: 1;
+            background-color: darkgrey;
+        }
+
+        .statWin {
+            background-color:gray;
+        }
+
+        .manualControls {
+            Display: none;
+        }
+
+        .followSelection {
+            Display: none;
+        }
+    </style>
+
 </head>
-<style>
-    .containerRow {
-        display: grid;
-    }
-
-    .listWin {
-        grid-column: 1;
-        grid-row: 1;
-        background-color: lightgray;
-    }
-
-    .mapWin {
-        grid-column-start: 2;
-        grid-column-end: 16;
-        grid-row: 1;
-        background-color: darkgrey;
-    }
-
-    .statWin {
-        background-color:gray;
-    }
-</style>
-
-<body>
+<body onload="start()">
     <div class="containerRow">
 
-        <div class="listWin">
+        <div class="listWin" id="robotList">
             <h1>WOMBAT List</h1>
-            <p>Robot 1</p>
-            <p>Robot 2</p>
+            <div class="listEntry" id="ROBOT1"  onclick="selectRobot(this.id)">
+                ROBOT1<br />
+                Battery: 50%<br />
+                Mode: Group Behaviour<br />
+                Carrying object: No
+            </div>
+            <div class="listEntry" id="ROBOT3"  onclick="selectRobot(this.id)">
+                ROBOT3<br />
+                Battery: 12%<br />
+                Mode: Group Behaviour<br />
+                Carrying object: No
+            </div>
         </div>
 
         <div class="mapWin">
@@ -47,6 +193,12 @@
     <div class="containerRow">
 
         <div class="statWin">
+            <div class="manualControls">
+
+            </div>
+            <div class="followSelection">
+
+            </div>
             <h1>WOMBAT Statistics</h1>
         </div>
         

@@ -1,0 +1,4 @@
+WOMBAT (robotID) at location (latitude) , (longitude) , (altitude). Object (objectDetected)
+int batteryLevel 
+bool carryingObject
+string Following robotID

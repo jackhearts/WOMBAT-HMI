@@ -36,6 +36,7 @@
 
         var selectedRobotID = ""; //The robotID of the currently selected robot
 
+        //Used when the user clicks a WOMBAT on the list, highlights the WOMBAT in the list and displays the relevant data in the context sensitive area
         function selectRobot(robotID) {
             console.log(robotID);
             listEntry = document.getElementById(robotID);
@@ -52,17 +53,6 @@
                 document.getElementById("statLeft").style.visibility = "visible";
                 selectedRobotID = robotID; 
             }
-            //TODO: Entire function
-            /* listEntry = getelementbyId(robotID)
-             * If listEntry exists
-             *  oldListEntry = getElementByID(selectedRobotID)
-             *  if oldListEntry exists
-             *      oldListEntry.class = "listEntry"
-             *  selectedRobotID = robotID
-             *  listEntry.class = "listEntry SelectedListEntry"
-             *  statWin.innerHTML = STUFF
-             *  
-            */  
         }
 
         function updateData() {
@@ -127,6 +117,9 @@
             
         }
 
+	
+        //used when the operator uses the mode change dropdown, displays the relevant controls (joystick/following selection)
+        //TODO: record mode change to dictionary and write to text file
         function modeChange(mode) {
             console.log("modechange");
             switch (mode) {

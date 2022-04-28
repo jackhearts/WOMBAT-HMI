@@ -23,3 +23,5 @@ Then go to the localhost CMD says in your internet browser, pretty sure it'll be
 http://localhost:1234/
 
 The OpenLayers should be there and it should have 3 WOMBATs just north of the Joondalup Campus.
+![cmdExample](https://user-images.githubusercontent.com/92205638/165839445-540032d7-9107-48bc-ace0-33f5a7dbd2be.jpg)
+![localhostExample](https://user-images.githubusercontent.com/92205638/165839450-e0d78aa6-7fbe-44db-8ff5-ebea8f13ddb5.jpg)

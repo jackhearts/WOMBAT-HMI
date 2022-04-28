@@ -1,10 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <title>WOMBAT Human Machine Interface</title>
-    
+
+
     <script>
         // mostRecentUpdate contains a Date object set to the value of the "last modified" metadata of the most recently modified .txt file that has accessed.
         var mostRecentUpdate;
@@ -37,6 +38,20 @@
 
         function selectRobot(robotID) {
             console.log(robotID);
+            listEntry = document.getElementById(robotID);
+            if (listEntry) { //if the selected robot is in the list (It should always be, but better safe than null reference error)
+                oldListEntry = document.getElementById(selectedRobotID);
+                if (oldListEntry) { //if the robot recorded as being the selected one is still in the list
+                    //remove list entry highlighting
+                    oldListEntry.classList.remove("selectedListEntry")
+                }
+                //highlight new WOMBAT list entry
+                listEntry.classList.add("selectedListEntry")
+                //TODO: compose string displaying details
+                document.getElementById("statWin").innerHTML = "THE SELECTED ROBOT IS " + robotID;
+                document.getElementById("statLeft").style.visibility = "visible";
+                selectedRobotID = robotID; 
+            }
             //TODO: Entire function
             /* listEntry = getelementbyId(robotID)
              * If listEntry exists
@@ -111,7 +126,30 @@
 			}
             
         }
-		
+
+        function modeChange(mode) {
+            console.log("modechange");
+            switch (mode) {
+                case "groupBehaviour":
+                    console.log(mode);
+                    document.getElementById("followSelection").style.display = "none";
+                    document.getElementById("manualControls").style.display = "none";
+                break;
+                case "follow":
+                    console.log(mode);
+                    console.log(document.getElementById("followSelection"));
+                    document.getElementById("followSelection").style.display = "block";
+                    document.getElementById("manualControls").style.display = "none";
+                break;
+                case "manual":
+                    console.log(mode);
+                    document.getElementById("followSelection").style.display = "none";
+                    document.getElementById("manualControls").style.display = "block";
+                break;
+            }
+        }
+
+
 		function start() {
 			//TODO: Remove, just for testing
 			updateDisplay("ROBOT1");
@@ -120,7 +158,6 @@
 		}
 		
     </script>
-    
     <style>
         .containerRow {
             display: grid;
@@ -150,22 +187,48 @@
             background-color: darkgrey;
         }
 
-        .statWin {
-            background-color:gray;
+        .gray {
+            background-color: gray;
+        }
+        #statLeft {
+            grid-column-start: 1;
+            text-align: center;
+            padding: 5px;
+            visibility: hidden;
         }
 
-        .manualControls {
+        #statWin {
+            grid-column-start: 2;
+            grid-column-end: 15;
+            padding: 5px;
+        }
+
+        .statRight {
+            grid-column-start: 15;
+            grid-column-end: 16;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #manualControls {
             Display: none;
         }
 
-        .followSelection {
+        #followSelection {
             Display: none;
+        }
+
+        .buttonArea {
+            width: 200px;
+            float:right;
+            background-color:blue;
         }
     </style>
 
 </head>
+
 <body onload="start()">
-    <div class="containerRow">
+    <div class="containerRow" >
 
         <div class="listWin" id="robotList">
             <h1>WOMBAT List</h1>
@@ -190,18 +253,29 @@
 
     </div>
 
-    <div class="containerRow">
+    <div class="containerRow gray">
 
-        <div class="statWin">
-            <div class="manualControls">
+        <div id="statLeft">
 
+            <select id="modeDropdown" onchange="modeChange(this.value)">
+                <option value="groupBehaviour">Group Behaviour</option>
+                <option value="follow">Follow</option>
+                <option value="manual">Manual Drive</option>
+            </select>
+            <div id="manualControls">
+                JOYSTICK GOES HERE
             </div>
-            <div class="followSelection">
-
+            <div id="followSelection">
+                Following: <input type="text" />
             </div>
-            <h1>WOMBAT Statistics</h1>
         </div>
-        
+        <div id="statWin">
+            <h1>No WOMBAT selected</h1>
+        </div>
+        <div class="statRight">
+            <button type="button">Group Behavior</button><br />
+            <button type="button">Map Marker</button>
+        </div>
     </div>
 </body>
 </html>

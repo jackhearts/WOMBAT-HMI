@@ -1,2 +1,0 @@
-Map Marker (markerID) at (x), (y)
-Map Marker 1 at 2132, 12515

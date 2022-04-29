@@ -152,10 +152,14 @@
 		
     </script>
     <style>
-        .containerRow {
+        @import "node_modules/ol/ol.css"; /* imports OpenLayers */
+
+        /* Sets up the page as a grid */
+        .containerRow { 
             display: grid;
         }
 
+        /* WOMBAT list Window (Left side of grid) */
         .listWin {
             grid-column: 1;
             grid-row: 1;
@@ -173,11 +177,20 @@
             background-color: silver;
         }
 
+        /* Overhead Map Window (Right side of grid) */
         .mapWin {
             grid-column-start: 2;
             grid-column-end: 16;
             grid-row: 1;
             background-color: darkgrey;
+        }
+
+        /* MapContainer for OpenLayers to plugin to */
+        html, body, #mapContainer {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        font-family: sans-serif;
         }
 
         .gray {
@@ -190,6 +203,7 @@
             visibility: hidden;
         }
 
+        /* WOMBAT Statistics Window (Bottom of grid) */
         #statWin {
             grid-column-start: 2;
             grid-column-end: 15;
@@ -221,8 +235,10 @@
 </head>
 
 <body onload="start()">
+    <!-- This containerRow puts top two windows on top of bottom window -->
     <div class="containerRow" >
 
+        <!-- WOMBAT list Window (Left side of grid) -->
         <div class="listWin" id="robotList">
             <h1>WOMBAT List</h1>
             <div class="listEntry" id="ROBOT1"  onclick="selectRobot(this.id)">
@@ -239,13 +255,16 @@
             </div>
         </div>
 
+        <!-- Overhead Map Window (Right side of grid) -->
         <div class="mapWin">
-            <h1 class="display-4">Overhead Map</h1>
-            <p>Insert map plugin here, probably, maybe.</p>
+            <!-- div mapContainer is where the OpenLayers map plugsin using the main.js file -->
+            <div id="mapContainer"></div> 
+            <script src="./main.js" type="module"></script>
         </div>
 
     </div>
 
+    <!-- This containerRow puts this below the above ContainerRow -->
     <div class="containerRow gray">
 
         <div id="statLeft">

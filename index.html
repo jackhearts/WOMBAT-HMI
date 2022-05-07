@@ -11,7 +11,7 @@
         var mostRecentUpdate;
         // robotDictionary stores a dictionary of the data collected from each robot's text file, and is indexed using the robot's ID
         var robotDictionary = {};
-        //Temporary testing initialisation 
+        //Temporary testing initialisation
         //TODO: remove once we are able to populate from .txt
         robotDictionary.ROBOT1 = {
             latitude: -28.7761,
@@ -48,10 +48,11 @@
                 }
                 //highlight new WOMBAT list entry
                 listEntry.classList.add("selectedListEntry")
-                //TODO: compose string displaying details
-                document.getElementById("statWin").innerHTML = "THE SELECTED ROBOT IS " + robotID;
+                //update contents of statwin
+                updateStatWin(robotID);
+                //display mode dropdown
                 document.getElementById("statLeft").style.visibility = "visible";
-                selectedRobotID = robotID; 
+                selectedRobotID = robotID;
             }
         }
 
@@ -62,100 +63,143 @@
              * iterate through .txt files
              *  if last modified > mostRecentUpdate
              *      access text file, record values in robotDictionary
-             *      if last modified > currentUpdateTime 
+             *      if last modified > currentUpdateTime
              *          currentUpdateTime = last modified
              *      updateDisplay(robotID)
              *mostRecentUpdate = currentUpdateTime
-             * 
+             *
              */
         };
 
 
 
         //Updates the robotList, statWin and robot on map associated with robotID using the data in the robotDictionary.
-		//If there is no entry in the robotDictionary, removes the robotList and robot on map, and clears the statWin if that robot was selected
+        //If there is no entry in the robotDictionary, removes the robotList and robot on map, and clears the statWin if that robot was selected
         function updateDisplay(robotID) {
             entryData = robotDictionary[robotID];
             listEntry = document.getElementById(robotID);
             if (entryData) { //if there is data for that robotID
-				//Add or update display elements relating to the robot
-				//TODO: place/relocate robot on map	
+                //Add or update display elements relating to the robot
+                //TODO: place/relocate robot on map
                 innerHTML = robotID
-                            + "<br />Battery: " + entryData.batteryLevel
-                            + " % <br />Mode: " + entryData.mode
-                            + "<br />Carrying object: " + entryData.carryingObject;
+                    + "<br />Battery: " + entryData.batteryLevel
+                    + " % <br />Mode: " + entryData.mode
+                    + "<br />Carrying object: " + entryData.carryingObject;
                 if (listEntry) { //if there is already a list entry for that robotID
                     //update the contents of the entry
                     listEntry.innerHTML = innerHTML;
                     if (listEntry.classList.contains("selectedListEntry")) { //if list entry is the currently selected one
-						//update contents of statWin
-                        //TODO: update statWin
+                        //update contents of statWin
+                        updateStatWin(robotID);
                     }
                 }
                 else {//else there is not yet a list entry for this robotID
-					//Create new list entry div and add into robotList
-					newListEntry = document.createElement("div");
+                    //Create new list entry div and add into robotList
+                    newListEntry = document.createElement("div");
                     newListEntry.className = "listEntry";
                     newListEntry.id = robotID;
                     newListEntry.setAttribute("onclick", "selectRobot(this.id)");
-					newListEntry.innerHTML = innerHTML;
+                    newListEntry.innerHTML = innerHTML;
                     document.getElementById("robotList").appendChild(newListEntry);
                 }
             }
-			else { //else there is no longer an entry for this robot
-				//remove display elements relating to the robot
-				if (listEntry) { //if there is an entry in the list
-					if (listEntry.classList.contains("selectedListEntry")) { //if list entry is the currently selected one
-						//clear contents of statWin
-                        //TODO: clear statWin
+            else { //else there is no longer an entry for this robot
+                //remove display elements relating to the robot
+                if (listEntry) { //if there is an entry in the list
+                    if (listEntry.classList.contains("selectedListEntry")) { //if list entry is the currently selected one
+                        //clear statWin
+                        document.getElementById("statWin").innerHTML = "<h1>No WOMBAT selected</h1>";
+                        document.getElementById("statLeft").style.visibility = "hidden";
                     }
-					//remove list entry
-					listEntry.parentNode.removeChild(listEntry);
-					//TODO: remove robot from map
-				}
-			}
-            
+                    //remove list entry
+                    listEntry.parentNode.removeChild(listEntry);
+                    //TODO: remove robot from map
+                }
+            }
+
         }
 
-	
+        function updateStatWin(robotID) {
+            entryData = robotDictionary[robotID];
+            innerHTML = robotID
+                + "<br />Battery: " + entryData.batteryLevel
+                + "% <br />Location: ";
+            if (entryData) { //if there is data for that robotID
+                innerHTML = robotID
+                    + "<br />Battery: " + entryData.batteryLevel
+                    + " % <br />Location: " + entryData.latitude;
+                if (entryData.latitude < 0) {
+                    innerHTML += "° S";
+                }
+                else {
+                    innerHTML += "° N";
+                }
+                innerHTML += ", " + entryData.longitude;
+                if (entryData.longitude < 0) {
+                    innerHTML += "° W";
+                }
+                else {
+                    innerHTML += "° E";
+                }
+                innerHTML += "<br />Carrying object: " + entryData.carryingObject
+                    + "<br />Object Detected: " + entryData.objectDetected;
+                document.getElementById("statWin").innerHTML = innerHTML
+                if (document.getElementById("modeDropdown").value != entryData.mode) {
+                    document.getElementById("modeDropdown").value = entryData.mode
+                    switch (entryData.mode) {
+                        case "groupBehaviour":
+                            document.getElementById("followSelection").style.display = "none";
+                            document.getElementById("manualControls").style.display = "none";
+                            break;
+                        case "follow":
+                            document.getElementById("followSelection").style.display = "block";
+                            document.getElementById("manualControls").style.display = "none";
+                            break;
+                        case "manual":
+                            document.getElementById("followSelection").style.display = "none";
+                            document.getElementById("manualControls").style.display = "block";
+                            break;
+                    }
+                }
+            }
+        }
+
+
         //used when the operator uses the mode change dropdown, displays the relevant controls (joystick/following selection)
         //TODO: record mode change to dictionary and write to text file
         function modeChange(mode) {
             console.log("modechange");
             switch (mode) {
                 case "groupBehaviour":
-                    console.log(mode);
                     document.getElementById("followSelection").style.display = "none";
                     document.getElementById("manualControls").style.display = "none";
-                break;
+                    break;
                 case "follow":
-                    console.log(mode);
-                    console.log(document.getElementById("followSelection"));
                     document.getElementById("followSelection").style.display = "block";
                     document.getElementById("manualControls").style.display = "none";
-                break;
+                    break;
                 case "manual":
-                    console.log(mode);
                     document.getElementById("followSelection").style.display = "none";
                     document.getElementById("manualControls").style.display = "block";
-                break;
+                    break;
             }
+            robotDictionary[selectedRobotID].mode = mode;
         }
 
 
-		function start() {
-			//TODO: Remove, just for testing
-			updateDisplay("ROBOT1");
-			updateDisplay("ROBOT2");
-			updateDisplay("ROBOT3");
-		}
-		
+        function start() {
+            //TODO: Remove, just for testing
+            updateDisplay("ROBOT1");
+            updateDisplay("ROBOT2");
+            updateDisplay("ROBOT3");
+        }
+
     </script>
     <style>
         @import "node_modules/ol/ol.css"; /* imports OpenLayers */
 
         /* Sets up the page as a grid */
-        .containerRow { 
+        .containerRow {
             display: grid;
         }
 
@@ -187,15 +231,16 @@
 
         /* MapContainer for OpenLayers to plugin to */
         html, body, #mapContainer {
-        margin: 0;
-        height: 100%;
-        width: 100%;
-        font-family: sans-serif;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            font-family: sans-serif;
         }
 
         .gray {
             background-color: gray;
         }
+
         #statLeft {
             grid-column-start: 1;
             text-align: center;
@@ -227,8 +272,8 @@
 
         .buttonArea {
             width: 200px;
-            float:right;
-            background-color:blue;
+            float: right;
+            background-color: blue;
         }
     </style>
 
@@ -236,18 +281,18 @@
 
 <body onload="start()">
     <!-- This containerRow puts top two windows on top of bottom window -->
-    <div class="containerRow" >
+    <div class="containerRow">
 
         <!-- WOMBAT list Window (Left side of grid) -->
         <div class="listWin" id="robotList">
             <h1>WOMBAT List</h1>
-            <div class="listEntry" id="ROBOT1"  onclick="selectRobot(this.id)">
+            <div class="listEntry" id="ROBOT1" onclick="selectRobot(this.id)">
                 ROBOT1<br />
                 Battery: 50%<br />
                 Mode: Group Behaviour<br />
                 Carrying object: No
             </div>
-            <div class="listEntry" id="ROBOT3"  onclick="selectRobot(this.id)">
+            <div class="listEntry" id="ROBOT3" onclick="selectRobot(this.id)">
                 ROBOT3<br />
                 Battery: 12%<br />
                 Mode: Group Behaviour<br />
@@ -258,7 +303,7 @@
         <!-- Overhead Map Window (Right side of grid) -->
         <div class="mapWin">
             <!-- div mapContainer is where the OpenLayers map plugsin using the main.js file -->
-            <div id="mapContainer"></div> 
+            <div id="mapContainer"></div>
             <script src="./main.js" type="module"></script>
         </div>
 

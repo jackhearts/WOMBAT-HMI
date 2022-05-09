@@ -203,17 +203,27 @@
             display: grid;
         }
 
+        .logoRow {
+            background-color: black;
+            width: 100%;
+        }
+
         /* WOMBAT list Window (Left side of grid) */
         .listWin {
+            border-style: solid;
+            border-radius: 15px;
+            margin: 15px;
+            background-color: white;
             grid-column: 1;
             grid-row: 1;
-            background-color: lightgray;
             overflow-y: scroll;
+            padding: 15px;
         }
 
         .listEntry {
-            border-style: solid;
-            padding: 5px;
+            background-color: lightgray;
+            padding: 10px;
+            margin-bottom: 25px;
             cursor: pointer;
         }
 
@@ -226,7 +236,10 @@
             grid-column-start: 2;
             grid-column-end: 16;
             grid-row: 1;
-            background-color: darkgrey;
+            border-style: solid;
+            border-radius: 15px;
+            margin: 15px;
+            background-color: white;
         }
 
         /* MapContainer for OpenLayers to plugin to */
@@ -237,8 +250,12 @@
             font-family: sans-serif;
         }
 
-        .gray {
-            background-color: gray;
+        .statRow {
+            border-style: solid;
+            border-radius: 15px;
+            margin: 15px;
+            background-color: white;
+            font-weight: bold;
         }
 
         #statLeft {
@@ -281,6 +298,9 @@
 
 <body onload="start()">
     <!-- This containerRow puts top two windows on top of bottom window -->
+    <div class="containerRow logoRow">
+        <img src="WOMBATLOGO.png" />
+    </div>
     <div class="containerRow">
 
         <!-- WOMBAT list Window (Left side of grid) -->
@@ -310,7 +330,7 @@
     </div>
 
     <!-- This containerRow puts this below the above ContainerRow -->
-    <div class="containerRow gray">
+    <div class="containerRow statRow">
 
         <div id="statLeft">
 
